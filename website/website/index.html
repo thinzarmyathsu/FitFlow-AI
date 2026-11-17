@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitFlow AI | Premium AI Fitness Platform</title>
+  <meta name="description" content="FitFlow AI is a premium AI fitness platform combining smart coaching, nutrition guidance, progress tracking, and a beautiful conversational experience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="public/logo/logo.png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050816;
+      --bg-2: #0b1220;
+      --bg-3: #111827;
+      --surface: rgba(8, 14, 28, 0.75);
+      --surface-strong: rgba(15, 23, 42, 0.84);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.16);
+      --cyan: #06d6ff;
+      --purple: #7b61ff;
+      --blue: #3b82f6;
+      --glow: rgba(6, 214, 255, 0.24);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(6, 214, 255, 0.16), transparent 22%),
+        radial-gradient(circle at 85% 10%, rgba(123, 97, 255, 0.14), transparent 24%),
+        linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .site-shell {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+    }
+
+    .glass-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(8, 14, 28, 0.68));
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 45px rgba(2, 8, 23, 0.45);
+    }
+
+    .site-header {
+      position: sticky;
+      top: 16px;
+      z-index: 80;
+      margin-top: 20px;
+      padding: 16px 22px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(6, 10, 24, 0.7);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 12px 38px rgba(2, 8, 23, 0.3);
+    }
+
+    .nav-link {
+      position: relative;
+      color: #cbd5e1;
+      transition: color 0.25s ease;
+      padding-bottom: 2px;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link:hover {
+      color: white;
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(6,214,255,0.16), rgba(123,97,255,0.16));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 10px 24px rgba(6,214,255,0.14);
+      overflow: hidden;
+    }
+
+    .logo-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: inherit;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .logo-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 0.9rem;
+    }
+
+    .hero-badge,
+    .pill,
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      padding: 0.7rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(6, 214, 255, 0.16);
+      color: #a5f3fc;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .hero-graphic {
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(140deg, rgba(6,214,255,0.16), rgba(123,97,255,0.14));
+      min-height: 500px;
+      padding: 24px;
+    }
+
+    .floating-orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(14px);
+      opacity: 0.65;
+      animation: drift 10s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 180px;
+      height: 180px;
+      background: rgba(6, 214, 255, 0.16);
+      top: -24px;
+      left: -24px;
+    }
+
+    .orb-2 {
+      width: 220px;
+      height: 220px;
+      background: rgba(123, 97, 255, 0.16);
+      right: -50px;
+      bottom: -30px;
+      animation-duration: 12s;
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 2;
+      border-radius: 24px;
+      padding: 24px;
+      background: rgba(4, 10, 24, 0.76);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 50px rgba(2, 8, 23, 0.35);
+    }
+
+    .metric-card {
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .metric-card:hover,
+    .feature-card:hover,
+    .glass-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(6, 214, 255, 0.24);
+      box-shadow: 0 16px 36px rgba(6, 214, 255, 0.12);
+    }
+
+    .button-primary,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      border-radius: 999px;
+      padding: 0.95rem 1.35rem;
+      font-weight: 600;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .button-primary {
+      color: #06121c;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      box-shadow: 0 15px 35px rgba(6, 214, 255, 0.24);
+    }
+
+    .button-primary:hover,
+    .button-secondary:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-secondary {
+      color: #f8fafc;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .feature-card {
+      padding: 28px;
+      border-radius: 26px;
+      background: linear-gradient(155deg, rgba(15, 23, 42, 0.88), rgba(6, 10, 24, 0.74));
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(6,214,255,0.08), transparent);
+      transform: translateX(-120%);
+      transition: transform 0.55s ease;
+    }
+
+    .feature-card:hover::before {
+      transform: translateX(120%);
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin: 0 auto 2.5rem;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      font-weight: 700;
+      color: white;
+      margin-top: 0.5rem;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-top: 0.95rem;
+    }
+
+    .testimonial-card {
+      position: relative;
+      padding: 1.8rem;
+      border-radius: 1.6rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      overflow: hidden;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(6, 214, 255, 0.28);
+      box-shadow: 0 18px 36px rgba(6, 214, 255, 0.12);
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-photo {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 999px;
+      border: 2px solid rgba(6, 214, 255, 0.3);
+      box-shadow: 0 8px 20px rgba(2, 8, 23, 0.35);
+    }
+
+    .testimonial-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .testimonial-role {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .testimonial-rating {
+      color: #fbbf24;
+      letter-spacing: 0.18em;
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .testimonial-quote {
+      color: #cbd5e1;
+      line-height: 1.8;
+      font-size: 0.98rem;
+    }
+
+    .testimonial-quote-icon {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      color: rgba(6, 214, 255, 0.2);
+      font-size: 1.4rem;
+    }
+
+    .video-shell {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      align-items: stretch;
+    }
+
+    .video-card {
+      padding: 1.2rem;
+      border-radius: 1.6rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(6, 214, 255, 0.28);
+      box-shadow: 0 18px 36px rgba(6, 214, 255, 0.12);
+    }
+
+    .video-frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(6,214,255,0.16), rgba(123,97,255,0.16));
+      border: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: 1rem;
+      min-height: 360px;
+    }
+
+    .video-frame video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 0;
+      background: #020617;
+      object-fit: cover;
+    }
+
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .video-play {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2, 6, 23, 0.7);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .video-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .video-copy {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 0.95rem;
+    }
+
+    .info-panel {
+      padding: 1.6rem;
+      border-radius: 1.6rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(8, 14, 28, 0.72));
+      box-shadow: 0 16px 32px rgba(2, 8, 23, 0.32);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    .info-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      width: fit-content;
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(6, 214, 255, 0.12);
+      color: #a5f3fc;
+      border: 1px solid rgba(6, 214, 255, 0.2);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .info-title {
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      font-weight: 700;
+      color: white;
+      line-height: 1.25;
+      margin-bottom: 0.85rem;
+    }
+
+    .info-copy {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 0.98rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 0.95rem;
+      margin-top: 0.6rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    .feature-row i {
+      color: var(--cyan);
+      font-size: 0.95rem;
+    }
+
+    .quote-box {
+      margin-top: 1.2rem;
+      padding: 0.95rem 1rem;
+      border-radius: 1rem;
+      background: linear-gradient(90deg, rgba(6,214,255,0.14), rgba(123,97,255,0.12));
+      border: 1px solid rgba(6,214,255,0.2);
+      color: #d7f9ff;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+
+    .highlight-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.95rem 1rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    .highlight-item i {
+      color: var(--cyan);
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+
+    .fade-in {
+      animation: fadeInUp 1s ease-out both;
+    }
+
+    .typing-dot {
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(20px, -18px, 0); }
+    }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.45; }
+      40% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .site-header {
+        border-radius: 24px;
+      }
+
+      .video-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .highlights-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="overflow-x-hidden">
+  <div class="site-shell">
+    <header class="site-header flex items-center justify-between gap-4">
+      <a href="#home" class="flex items-center gap-3 text-white font-semibold text-lg">
+        <div class="logo-mark">
+          <img src="public/logo/logo.png" alt="FitFlow AI logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+          <div class="logo-fallback hidden">FF</div>
+        </div>
+        <span>FitFlow AI</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#chatbot" class="nav-link">Chatbot</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      <a href="#chatbot" class="button-secondary hidden sm:inline-flex">Launch Chat</a>
+    </header>
+
+    <section id="home" class="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] items-center py-16 lg:py-24">
+      <div class="space-y-8 fade-in">
+        <div class="hero-badge">
+          <i class="fas fa-robot"></i>
+          Academic AI fitness assistant prototype.
+        </div>
+        <div>
+          <h1 class="text-4xl sm:text-5xl xl:text-7xl font-extrabold tracking-tight text-white leading-[0.95]">FitFlow AI</h1>
+          <p class="mt-5 max-w-2xl text-slate-300 leading-8 text-lg sm:text-xl">An academic prototype showcasing chatbot development, automated fitness recommendations and responsive website design.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#chatbot" class="button-primary">Chat with AI <i class="fas fa-arrow-right"></i></a>
+          <a href="#features" class="button-secondary">Explore Features</a>
+        </div>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div class="metric-card">
+            <p class="text-3xl font-bold text-white">AI</p>
+            <p class="mt-2 text-slate-400 text-sm">Chatbot</p>
+          </div>
+          <div class="metric-card">
+            <p class="text-3xl font-bold text-white">2</p>
+            <p class="mt-2 text-slate-400 text-sm">Chat Interfaces</p>
+          </div>
+          <div class="metric-card">
+            <p class="text-3xl font-bold text-white">7-Day</p>
+            <p class="mt-2 text-slate-400 text-sm">Plans</p>
+          </div>
+          <div class="metric-card">
+            <p class="text-3xl font-bold text-white">n8n</p>
+            <p class="mt-2 text-slate-400 text-sm">Automation</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative fade-in">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="hero-graphic">
+          <div class="hero-card">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <p class="text-slate-300 text-sm">AI Fitness Coach</p>
+                <h2 class="text-2xl font-semibold text-white">Meet your next-level coach</h2>
+              </div>
+              <div class="pill">
+                <i class="fas fa-circle text-emerald-400 text-[8px]"></i>
+                Demo only
+              </div>
+            </div>
+            <div class="rounded-[24px] border border-white/10 bg-slate-950/70 p-5 shadow-inner shadow-slate-900/40">
+              <p class="leading-7 text-slate-200">“Ready for a smarter session? Ask about workout routines, meal planning, mobility, recovery, or progress tracking and receive a tailored response instantly.”</p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2 mt-5">
+              <div class="rounded-[22px] border border-cyan-400/10 bg-cyan-500/10 p-4">
+                <p class="text-sm uppercase tracking-[0.2em] text-cyan-300">Strength</p>
+                <p class="mt-3 text-lg font-semibold text-white">Adaptive workouts</p>
+              </div>
+              <div class="rounded-[22px] border border-violet-400/10 bg-violet-500/10 p-4">
+                <p class="text-sm uppercase tracking-[0.2em] text-violet-300">Recovery</p>
+                <p class="mt-3 text-lg font-semibold text-white">Nutrition & rest</p>
+              </div>
+            </div>
+            <div class="mt-5 flex items-center gap-3 text-sm text-slate-400">
+              <i class="fas fa-sparkles text-cyan-300"></i>
+              Session memory, smart suggestions, and premium UX built in.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="py-16">
+      <div class="section-heading">
+        <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">Features</p>
+        <h2 class="section-title">Everything you need for a smarter fitness journey</h2>
+        <p class="section-copy">From live coaching prompts to wellness-first recovery advice, FitFlow AI blends premium design with useful everyday guidance.</p>
+      </div>
+      <div class="grid gap-6 xl:grid-cols-3">
+        <article class="feature-card">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-300 mb-5">
+            <svg viewBox="0 0 64 64" class="w-8 h-8">
+              <rect x="12" y="12" width="40" height="40" rx="12" fill="rgba(255,255,255,0.06)" />
+              <path d="M24 22h16M24 32h22M24 42h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Interactive Chat</h3>
+          <p class="mt-3 text-slate-400">Ask about workouts, nutrition, energy levels, hydration, and progress in a beautifully streamlined conversation.</p>
+        </article>
+        <article class="feature-card">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-violet-500/10 text-violet-300 mb-5">
+            <svg viewBox="0 0 64 64" class="w-8 h-8">
+              <path d="M24 48V26m8 22V16m8 32v-12m8 12V22" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+              <path d="M16 48h32" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Smart Programs</h3>
+          <p class="mt-3 text-slate-400">Receive tailored routines based on your goals, schedule, and how you feel day to day.</p>
+        </article>
+        <article class="feature-card">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-lime-500/10 text-lime-300 mb-5">
+            <svg viewBox="0 0 64 64" class="w-8 h-8">
+              <path d="M24 32c0-8 6-14 14-14 8 0 14 6 14 14 0 8-6 14-14 14-8 0-14-6-14-14Z" fill="none" stroke="currentColor" stroke-width="3" />
+              <path d="M32 20v12l8 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Safe Guidance</h3>
+          <p class="mt-3 text-slate-400">Enjoy dependable support and clear expectations backed by a secure, responsive experience.</p>
+        </article>
+        <article class="feature-card">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-amber-500/10 text-amber-300 mb-5">
+            <svg viewBox="0 0 64 64" class="w-8 h-8">
+              <path d="M22 40c0-8 5-14 10-14 5 0 10 6 10 14 0 8-4 12-10 12s-10-4-10-12Z" fill="rgba(255,255,255,0.08)" stroke="currentColor" stroke-width="3" />
+              <path d="M28 24c0-4 2-8 4-8 2 0 4 4 4 8" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Wellness-first</h3>
+          <p class="mt-3 text-slate-400">Balanced support for training, recovery, nutrition, and long-term consistency without burnout.</p>
+        </article>
+        <article class="feature-card">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-300 mb-5">
+            <svg viewBox="0 0 64 64" class="w-8 h-8">
+              <path d="M18 38h28M18 26h28" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+              <rect x="18" y="18" width="28" height="28" rx="10" fill="none" stroke="currentColor" stroke-width="3" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Modern UX</h3>
+          <p class="mt-3 text-slate-400">A polished, intuitive experience with thoughtful motion, responsive layout, and luxury-level polish.</p>
+        </article>
+        <article class="feature-card">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-violet-500/10 text-violet-300 mb-5">
+            <svg viewBox="0 0 64 64" class="w-8 h-8">
+              <path d="M24 46a12 12 0 0 1 0-24 12 12 0 0 1 12 12 12 12 0 0 1-12 12Zm16-10a8 8 0 1 0 0-16" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Friendly Support</h3>
+          <p class="mt-3 text-slate-400">The assistant feels approachable and encouraging, making every step of the plan easier to follow.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="py-16">
+      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] items-center">
+        <div class="glass-card rounded-[2rem] p-8 md:p-10 shadow-2xl shadow-slate-950/30">
+          <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">Why FitFlow AI</p>
+          <h2 class="mt-4 text-3xl font-semibold text-white">A premium layer over your everyday fitness routine</h2>
+          <p class="mt-6 text-slate-300 leading-8">FitFlow AI blends coaching, planning, and mindful progress tracking into one calm, polished experience that feels as refined as your favorite modern apps.</p>
+          <div class="mt-8 space-y-4">
+            <div class="flex gap-3 items-start">
+              <span class="mt-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-300"><i class="fas fa-bolt"></i></span>
+              <div>
+                <h3 class="text-white font-semibold">Instant feedback</h3>
+                <p class="text-slate-400">Quick guidance that feels useful, immediate, and practical.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="mt-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-300"><i class="fas fa-chart-line"></i></span>
+              <div>
+                <h3 class="text-white font-semibold">Progress focus</h3>
+                <p class="text-slate-400">Stay aligned with your health goals through great prompts and consistent coaching.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="mt-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-300"><i class="fas fa-shield-heart"></i></span>
+              <div>
+                <h3 class="text-white font-semibold">Wellness without pressure</h3>
+                <p class="text-slate-400">A supportive tone that encourages balance, not overwhelm.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-[2rem] p-6 md:p-8 shadow-xl shadow-slate-950/25">
+          <svg viewBox="0 0 480 360" class="w-full h-auto" aria-label="Fitness dashboard illustration">
+            <rect x="38" y="52" width="404" height="256" rx="28" fill="rgba(8,14,28,0.8)" stroke="rgba(255,255,255,0.12)" />
+            <rect x="66" y="82" width="150" height="112" rx="20" fill="rgba(6,214,255,0.14)" />
+            <rect x="232" y="82" width="182" height="28" rx="14" fill="rgba(123,97,255,0.24)" />
+            <rect x="232" y="124" width="138" height="18" rx="9" fill="rgba(255,255,255,0.08)" />
+            <rect x="66" y="212" width="348" height="64" rx="18" fill="rgba(255,255,255,0.05)" />
+            <path d="M90 250c28-44 50-70 78-70 42 0 50 40 80 40 18 0 27-10 42-24 12-11 24-19 44-19" stroke="url(#g1)" stroke-width="8" fill="none" stroke-linecap="round" />
+            <defs>
+              <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="0%">
+                <stop offset="0%" stop-color="#06D6FF"/>
+                <stop offset="100%" stop-color="#7B61FF"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16" aria-label="Academic project notice">
+      <div class="glass-card rounded-[1.6rem] p-8 text-center">
+        <h2 class="text-2xl font-semibold text-white">Academic Project Demonstration</h2>
+        <p class="mt-3 text-slate-300">FitFlow AI is a student-built prototype. The chatbot backend is currently inactive; the workflow source and demonstration materials are included for portfolio review.</p>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="section-heading">
+        <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">Watch FitFlow AI in Action</p>
+        <h2 class="section-title">See how FitFlow AI turns coaching into a premium experience</h2>
+      </div>
+      <div class="video-shell">
+        <article class="video-card glass-card">
+          <div class="video-frame">
+            <video controls autoplay muted loop playsinline preload="metadata" aria-label="FitFlow AI marketing video">
+              <source src="public/FitFlow AI Marketing Video.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <h3 class="video-title">FitFlow AI Marketing Video</h3>
+          <p class="video-copy">Learn how FitFlow AI helps users stay healthy with personalized AI-powered fitness coaching.</p>
+        </article>
+        <div class="info-panel">
+          <div class="info-badge"><i class="fas fa-sparkles"></i> Why FitFlow AI</div>
+          <h3 class="info-title">Your Personal AI Fitness Coach</h3>
+          <p class="info-copy">FitFlow AI creates personalised workout plans, healthy meal recommendations, BMI insights, and intelligent fitness guidance tailored to every user's goals. Stay motivated with an AI coach available anytime.</p>
+          <div class="feature-row"><i class="fas fa-dumbbell"></i><span>Personalized Workout Plans</span></div>
+          <div class="feature-row"><i class="fas fa-utensils"></i><span>Smart Meal Recommendations</span></div>
+          <div class="feature-row"><i class="fas fa-heart-pulse"></i><span>BMI &amp; Health Analysis</span></div>
+          <div class="feature-row"><i class="fas fa-robot"></i><span>AI Fitness Coach</span></div>
+          <div class="quote-box">“Smarter fitness starts with smarter guidance.”</div>
+        </div>
+      </div>
+      <div class="highlights-grid">
+        <div class="highlight-item"><i class="fas fa-check-circle"></i><span>Personalized Workout Plans</span></div>
+        <div class="highlight-item"><i class="fas fa-check-circle"></i><span>Smart Meal Recommendations</span></div>
+        <div class="highlight-item"><i class="fas fa-check-circle"></i><span>AI Fitness Coach</span></div>
+        <div class="highlight-item"><i class="fas fa-check-circle"></i><span>Secure AI Chatbot</span></div>
+        <div class="highlight-item"><i class="fas fa-check-circle"></i><span>Real-time Responses</span></div>
+        <div class="highlight-item"><i class="fas fa-check-circle"></i><span>Easy to Use</span></div>
+      </div>
+    </section>
+
+    <section id="chatbot" class="py-16">
+      <div class="section-heading">
+        <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">AI Chatbot</p>
+        <h2 class="section-title">Talk to FitFlow AI and get instant fitness coaching</h2>
+        <p class="section-copy">A polished chat experience with beautiful messaging, suggested prompts, typing animation, and a documented n8n workflow integration (currently inactive).</p>
+      </div>
+      <div class="glass-card relative overflow-hidden rounded-[2rem] border border-white/10 p-6 shadow-2xl shadow-slate-950/40">
+        <div class="absolute -right-20 top-8 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl"></div>
+        <div class="absolute -left-10 bottom-10 h-44 w-44 rounded-full bg-violet-500/10 blur-3xl"></div>
+        <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h3 class="text-xl font-semibold text-white">FitFlow Assistant</h3>
+            <p class="text-slate-400">Ask about workouts, nutrition, recovery, or progress tracking.</p>
+          </div>
+          <div class="inline-flex items-center gap-2 rounded-full bg-slate-900/60 px-4 py-2 text-slate-200 text-sm">
+            <i class="fas fa-memory text-cyan-300"></i>
+            Session memory (prototype)
+          </div>
+        </div>
+        <div class="mb-5 flex flex-wrap gap-3">
+          <button class="pill">💪 Create a workout plan</button>
+          <button class="pill">🥗 Healthy meal plan</button>
+          <button class="pill">🔥 Lose weight</button>
+          <button class="pill">🏋 Build muscle</button>
+          <button class="pill">📈 Track progress</button>
+          <button class="pill">💧 Hydration advice</button>
+        </div>
+        <div id="chat-messages" class="min-h-[360px] max-h-[520px] overflow-y-auto scrollbar-thin rounded-[1.75rem] border border-white/10 bg-slate-950/70 p-5 shadow-inner shadow-slate-950/40">
+          <div class="flex h-full items-center justify-center text-slate-500">
+            Chatbot demo interface — the live AI service is currently inactive.
+          </div>
+        </div>
+        <div id="typing-indicator" class="mt-5 hidden rounded-3xl bg-slate-900/70 px-4 py-3 text-slate-300 flex items-center gap-3">
+          <div class="flex h-3 w-16 items-center gap-2">
+            <span class="typing-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+            <span class="typing-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+            <span class="typing-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+          </div>
+          <span>FitFlow AI is typing...</span>
+        </div>
+        <div class="mt-5 grid gap-4 sm:grid-cols-[1fr_auto]">
+          <input id="bot-input" type="text" placeholder="Type your fitness question..." class="w-full rounded-3xl border border-slate-800/80 bg-slate-950/90 px-5 py-4 text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition" />
+          <button id="send-btn" class="inline-flex items-center justify-center rounded-3xl bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-4 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition">Send <i class="fas fa-paper-plane ml-2"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="grid gap-8 lg:grid-cols-[1fr_1fr]">
+        <div class="glass-card rounded-[2rem] p-8 md:p-10">
+          <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">FAQ</p>
+          <div class="mt-6 space-y-4">
+            <div class="rounded-[1.1rem] border border-white/10 bg-slate-950/50 p-4">
+              <p class="font-semibold text-white">Can I use FitFlow AI for meal planning?</p>
+              <p class="mt-2 text-sm text-slate-400">Yes. The assistant can suggest balanced meal ideas, hydration reminders, and nutrition support.</p>
+            </div>
+            <div class="rounded-[1.1rem] border border-white/10 bg-slate-950/50 p-4">
+              <p class="font-semibold text-white">Is this suitable for beginners?</p>
+              <p class="mt-2 text-sm text-slate-400">Absolutely. It adapts for beginners, intermediate users, and experienced athletes.</p>
+            </div>
+            <div class="rounded-[1.1rem] border border-white/10 bg-slate-950/50 p-4">
+              <p class="font-semibold text-white">Does it remember my recent conversation?</p>
+              <p class="mt-2 text-sm text-slate-400">Yes. The current session memory remains active while you interact with the chatbot.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="py-16">
+      <div class="glass-card rounded-[2rem] p-8 md:p-10">
+        <div class="grid gap-8 lg:grid-cols-[1fr_0.9fr] items-center">
+          <div>
+            <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">Newsletter</p>
+            <h2 class="mt-4 text-3xl font-semibold text-white">Newsletter Interface Demo</h2>
+            <p class="mt-4 text-slate-300 leading-8">Newsletter signup is a visual demonstration and does not submit or store email addresses.</p>
+          </div>
+          <div class="rounded-[1.4rem] border border-white/10 bg-slate-950/60 p-6">
+            <div class="flex flex-col gap-3">
+              <input disabled aria-label="Inactive newsletter signup demo" class="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-slate-200" placeholder="Demo only — signup inactive" />
+              <button disabled class="button-primary" aria-disabled="true">Demo only</button>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-3 text-sm text-slate-400">
+              <span><i class="fab fa-instagram mr-2"></i> Instagram</span>
+              <span><i class="fab fa-x-twitter mr-2"></i> X</span>
+              <span><i class="fab fa-linkedin mr-2"></i> LinkedIn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-12">
+      <div class="glass-card rounded-[2rem] p-8 md:p-10 text-center">
+        <p class="section-label text-cyan-300 uppercase tracking-[0.3em] text-xs">Ready to begin?</p>
+        <h2 class="mt-4 text-3xl font-semibold text-white">Start your smarter fitness journey today</h2>
+        <p class="mt-4 text-slate-300 leading-8 max-w-2xl mx-auto">FitFlow AI combines beautiful design, practical guidance, and conversational coaching into one premium experience.</p>
+        <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#chatbot" class="button-primary">Start Chatting</a>
+          <a href="#features" class="button-secondary">Explore Platform</a>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer" class="py-12 text-slate-400 text-sm">
+      <div class="border-t border-slate-800/70 pt-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center gap-3 text-white font-semibold">
+          <div class="logo-mark" style="width: 48px; height: 48px;">
+            <img src="public/logo/logo.png" alt="FitFlow AI logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+            <div class="logo-fallback hidden">FF</div>
+          </div>
+          <div>
+            <p>FitFlow AI</p>
+            <p class="text-slate-500 text-xs">Premium AI fitness platform</p>
+          </div>
+        </div>
+        <p>© 2026 FitFlow AI. Built with smart chat, elegant UI, and responsive design.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const chatInput = document.getElementById('bot-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatMessages = document.getElementById('chat-messages');
+    const typingIndicator = document.getElementById('typing-indicator');
+
+    const sessionId = "web-user-" + Math.floor(Math.random() * 100000);
+    let chatHistory = [];
+    // Intentionally unset for the public portfolio. Never publish private endpoints or API keys.
+    const CHATBOT_WEBHOOK_URL = '';
+
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function appendMessage(text, isUser) {
+      const bubble = document.createElement('div');
+      bubble.className = `max-w-[92%] ${isUser ? 'ml-auto rounded-[2rem] rounded-br-sm bg-cyan-500/15 text-cyan-100' : 'mr-auto rounded-[2rem] rounded-bl-sm bg-slate-900/90 text-slate-200'} p-4 shadow-lg shadow-slate-950/20 border ${isUser ? 'border-cyan-500/20' : 'border-slate-700/40'} mb-4`;
+      const messageText = document.createElement('div');
+      messageText.className = 'whitespace-pre-wrap break-words text-sm leading-6';
+      messageText.textContent = text;
+      const timeLabel = document.createElement('div');
+      timeLabel.className = 'mt-3 text-[11px] text-slate-500 text-right';
+      timeLabel.textContent = formatTime(new Date());
+      bubble.append(messageText, timeLabel);
+      chatMessages.appendChild(bubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      chatHistory.push({ text, isUser, timestamp: new Date().toISOString() });
+    }
+
+    async function handleSend() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      if (chatMessages.querySelector('.empty-message')) {
+        const empty = chatMessages.querySelector('.empty-message');
+        if (empty) empty.remove();
+      }
+      appendMessage(text, true);
+      chatInput.value = '';
+      if (!CHATBOT_WEBHOOK_URL) {
+        appendMessage('This is a portfolio demo. The live chatbot service is currently inactive. Please see the project video and n8n workflow for how it works.', false);
+        return;
+      }
+      typingIndicator.classList.remove('hidden');
+
+      try {
+        const response = await fetch(CHATBOT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, sessionId })
+        });
+
+        const data = await response.json();
+        typingIndicator.classList.add('hidden');
+
+        if (!response.ok || !data || typeof data.reply !== 'string') {
+          appendMessage('⚠️ Unable to connect to FitFlow AI.', false);
+          return;
+        }
+        appendMessage(data.reply, false);
+      } catch (error) {
+        typingIndicator.classList.add('hidden');
+        appendMessage('⚠️ Unable to connect to FitFlow AI.', false);
+      }
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    chatInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleSend();
+      }
+    });
+  </script>
+</body>
+</html>
