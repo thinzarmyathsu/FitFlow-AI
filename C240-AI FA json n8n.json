@@ -1,0 +1,554 @@
+{
+  "name": "C240-AI FA",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -288
+      ],
+      "id": "be6cf619-2e54-4653-bf14-2b328be9e277",
+      "name": "Telegram Trigger",
+      "webhookId": "2545186d-6b00-4386-8ffe-2b23acf7dcb4",
+      "credentials": {
+        "telegramApi": {
+          "id": "eLmiOdbbM2oh7euG",
+          "name": "Telegram FitFlow (TZMS)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message?.text || $json.body?.message }}",
+        "options": {
+          "systemMessage": "Role:\n\nYou are FitFlow, an AI Fitness Assistant.\n\nYou help users create personalised workout plans and meal plans based on the information they provide.\n\nInstructions:\n\n1. Ask the user for any missing information before creating a plan.\n\nRequired information:\n- Name\n- Age\n- Gender\n- Height\n- Weight\n- Goal\n- Activity Level\n- Workout Preference (Home or Gym)\n\n2. Once all information has been collected, use the FitFlow Database tool.\n\n3. Read the workout information from the database.\n\n4. Find the closest matching workout recommendation.\n\n5. Create a personalised 7-day workout plan.\n\n6. Create a personalised 7-day meal plan.\n\n7. Explain the workout in simple English.\n\n8. Encourage healthy habits.\n\nRules:\n\n- Always use the FitFlow Database tool before creating recommendations.\n- Never give medical advice.\n- Recommend proper hydration.\n- Recommend warm-up before every workout.\n- If information is missing, ask the user politely.\n\nTools:\n\nFitFlow Database\n\nReturns workout templates, activity levels, meal plans and calorie ranges.\n\nYou MUST use this tool before generating a workout plan.\n\nExamples:\n\nUser:\n\nAge: 22\nGender: Male\nHeight: 175\nWeight: 68\nGoal: Build Muscle\nWorkout Preference: Gym\n\nAssistant:\n\nGenerate a 7-day workout plan and a 7-day meal plan suitable for a beginner who wants to build muscle.\n\nContext:\n\nThe FitFlow Database contains these columns:\n\nGoal\nWorkout Preference\nActivity Level\nWorkout Days\nExercises\nMeal Plan\nCalories\n\nOnly use information returned from the FitFlow Database.t"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        640,
+        0
+      ],
+      "id": "0f6c9507-ffdf-4a1e-b4cb-9d78a458372e",
+      "name": "FitFlow Database"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-v4-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        560,
+        256
+      ],
+      "id": "9f6f420c-a647-4171-9a87-459b96dbd1d5",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "n5qWAW7JjXi2jLcb",
+          "name": "OpenRouter account (TZMS)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message?.from?.id || $json.body?.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        288
+      ],
+      "id": "769cce31-d841-4e30-b42e-6ea4ee5d1f46",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1A4wbhNvf_5Jga-SAJVTd7z7etsOVekG2vSZ96v5VYNc",
+          "mode": "list",
+          "cachedResultName": "FitFlow Workout Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1A4wbhNvf_5Jga-SAJVTd7z7etsOVekG2vSZ96v5VYNc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1719308035,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1A4wbhNvf_5Jga-SAJVTd7z7etsOVekG2vSZ96v5VYNc/edit#gid=1719308035"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        240
+      ],
+      "id": "fa79917d-79bc-4175-b7af-71e0f240e9be",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "moNn2wmaoWRAycLA",
+          "name": "Google Sheets (TZMS)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{$json.output}}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        -560
+      ],
+      "id": "307d4ba9-7986-4bb4-995e-e8f2382f7ee7",
+      "name": "Send a text message",
+      "webhookId": "c1957170-b05b-4be3-92e2-4651c79fe902",
+      "credentials": {
+        "telegramApi": {
+          "id": "eLmiOdbbM2oh7euG",
+          "name": "Telegram FitFlow (TZMS)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9a23a356-a592-49de-8fef-1bc9ed25acc2",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -192,
+        32
+      ],
+      "id": "f4e7e7bb-b754-4457-b456-90b6b82a678a",
+      "name": "Webhook",
+      "webhookId": "9a23a356-a592-49de-8fef-1bc9ed25acc2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38bf27a2-ead3-45d6-8445-81329a01bea9",
+              "name": "source",
+              "value": "website",
+              "type": "string"
+            },
+            {
+              "id": "bb3b5286-83b1-411c-a00b-778a3293dfb6",
+              "name": "userMessage",
+              "value": "={{$json.message}}",
+              "type": "string"
+            },
+            {
+              "id": "9fe1f934-d635-496b-b601-c025cc640ef0",
+              "name": "userId",
+              "value": "={{$json.sessionId}}",
+              "type": "string"
+            },
+            {
+              "id": "226cdf5e-7ac7-4694-b4f3-84049739ee45",
+              "name": "platform",
+              "value": "website",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        32
+      ],
+      "id": "e45e472b-d703-4e2b-81b1-30f15b18103e",
+      "name": "Set(Website)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b636be22-bec3-401f-9f19-06db96a401fe",
+              "name": "source",
+              "value": "telegram",
+              "type": "string"
+            },
+            {
+              "id": "9433ba30-d6d5-4603-a972-d49a9f573c91",
+              "name": "userMessage",
+              "value": "={{$json.message.text}}",
+              "type": "string"
+            },
+            {
+              "id": "74b41efa-d554-45cd-911b-7108a9da6d77",
+              "name": "userId",
+              "value": "={{$json.message.from.id}}",
+              "type": "string"
+            },
+            {
+              "id": "15f568cb-ed42-44ed-9e5a-7760e21b0eb8",
+              "name": "platform",
+              "value": "telegram",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -288
+      ],
+      "id": "0fa0fa2b-69f8-4fa5-a879-ec1618407e1b",
+      "name": "Set (Telegram)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "15c0ab99-57b8-42a6-b7ef-1cef3e760bb4",
+              "leftValue": "={{$json.platform}}",
+              "rightValue": "telegram",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        352,
+        -144
+      ],
+      "id": "9ae90ffb-2076-4eba-a97b-ccdad60be755",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{\n{\n  reply: $json.output\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1296,
+        208
+      ],
+      "id": "3dc3027f-ced3-4a5b-87c8-dc4f871490f5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"reply\": $json.output } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1136,
+        -64
+      ],
+      "id": "88d8d554-e4ab-4ba3-8bde-1243bc8237c5",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message?.text || $json.body?.message }}",
+        "options": {
+          "systemMessage": "Role:\n\nYou are FitFlow, an AI Fitness Assistant.\n\nYou help users create personalised workout plans and meal plans based on the information they provide.\n\nInstructions:\n\n1. Ask the user for any missing information before creating a plan.\n\nRequired information:\n- Name\n- Age\n- Gender\n- Height\n- Weight\n- Goal\n- Activity Level\n- Workout Preference (Home or Gym)\n\n2. Once all information has been collected, use the FitFlow Database tool.\n\n3. Read the workout information from the database.\n\n4. Find the closest matching workout recommendation.\n\n5. Create a personalised 7-day workout plan.\n\n6. Create a personalised 7-day meal plan.\n\n7. Explain the workout in simple English.\n\n8. Encourage healthy habits.\n\nRules:\n\n- Always use the FitFlow Database tool before creating recommendations.\n- Never give medical advice.\n- Recommend proper hydration.\n- Recommend warm-up before every workout.\n- If information is missing, ask the user politely.\n\nTools:\n\nFitFlow Database\n\nReturns workout templates, activity levels, meal plans and calorie ranges.\n\nYou MUST use this tool before generating a workout plan.\n\nExamples:\n\nUser:\n\nAge: 22\nGender: Male\nHeight: 175\nWeight: 68\nGoal: Build Muscle\nWorkout Preference: Gym\n\nAssistant:\n\nGenerate a 7-day workout plan and a 7-day meal plan suitable for a beginner who wants to build muscle.\n\nContext:\n\nThe FitFlow Database contains these columns:\n\nGoal\nWorkout Preference\nActivity Level\nWorkout Days\nExercises\nMeal Plan\nCalories\n\nOnly use information returned from the FitFlow Database.t"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        656,
+        -544
+      ],
+      "id": "b9e8ea5f-c918-4c12-a2b3-b1b93a620e95",
+      "name": "FitFlow Database1"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-v4-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -368
+      ],
+      "id": "2804d8d5-9673-413c-93cd-7feaec8f8639",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "n5qWAW7JjXi2jLcb",
+          "name": "OpenRouter account (TZMS)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message?.from?.id || $json.body?.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        752,
+        -336
+      ],
+      "id": "0f7f45d9-0737-494b-b596-c081622b4eab",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1A4wbhNvf_5Jga-SAJVTd7z7etsOVekG2vSZ96v5VYNc",
+          "mode": "list",
+          "cachedResultName": "FitFlow Workout Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1A4wbhNvf_5Jga-SAJVTd7z7etsOVekG2vSZ96v5VYNc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1719308035,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1A4wbhNvf_5Jga-SAJVTd7z7etsOVekG2vSZ96v5VYNc/edit#gid=1719308035"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        -352
+      ],
+      "id": "f9285950-3847-4744-b197-cc966471e506",
+      "name": "Get row(s) in sheet in Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "moNn2wmaoWRAycLA",
+          "name": "Google Sheets (TZMS)"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "FitFlow Database",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "FitFlow Database",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "FitFlow Database",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FitFlow Database": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set(Website)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set(Website)": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "FitFlow Database1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "FitFlow Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "FitFlow Database1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "FitFlow Database1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "FitFlow Database1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FitFlow Database1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3d86b762-5e69-46bb-919b-04aabc0f0305",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4ebadb9d95df0efff4e8784a1811953a63bd62f8d7a2a45b7c8f23992108d48"
+  },
+  "nodeGroups": [],
+  "id": "eFfXSOvsTqOWmsco",
+  "tags": []
+}
