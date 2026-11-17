@@ -32,5 +32,9 @@ This project was developed for academic purposes. The live chatbot services are 
 ## Demonstration
 Please refer to the project demonstration videos and presentation included in this repository.
 
+## Live Website
+View the FitFlow AI website: https://thinzarmyathsu.github.io/FitFlow-AI/website/website/
+Note: The website is hosted for portfolio demonstration purposes. The AI chatbot backend is currently inactive.
+
 ## What I Learned
 Through this project, I gained practical experience in AI chatbot development, workflow automation, system integration, prompt engineering and troubleshooting.
